@@ -141,6 +141,7 @@ class Doctrine2 extends CodeceptionModule implements DependsOnModule, DataMapper
         'connection_callback' => false,
         'depends' => null,
         'purge_mode' => 1, // ORMPurger::PURGE_MODE_DELETE
+        'excluded_tables' => []
     ];
 
     protected $dependencyMessage = <<<EOF
@@ -777,7 +778,7 @@ EOF;
         }
 
         try {
-            $purger = new ORMPurger($this->em);
+            $purger = new ORMPurger($this->em, $this->config['excluded_tables']);
             $purger->setPurgeMode($this->config['purge_mode']);
             $executor = new ORMExecutor($this->em, $purger);
             $executor->execute($loader->getFixtures(), $append);
